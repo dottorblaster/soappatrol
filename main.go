@@ -1,11 +1,12 @@
 package main
 
 import (
+	"encoding/xml"
 	"fmt"
+	"github.com/foomo/soap"
 	"net"
 	"net/http"
 	"os"
-        "github.com/globusdigital/soap"
 )
 
 // FooRequest a simple request
@@ -21,22 +22,18 @@ type FooResponse struct {
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Fprintln(os.Stderr, "usage:", os.Args[0], "/path.sock [wwwroot]")
+		fmt.Fprintln(os.Stderr, "usage:", os.Args[0], "/path.sock")
 		return
 	}
 
-	fmt.Println("Unix HTTP SOAP server")
-
-	root := "."
-	if len(os.Args) > 2 {
-		root = os.Args[2]
-	}
+	fmt.Println("Unix SOAP server")
 
 	os.Remove(os.Args[1])
 
-        soapServer := soap.NewServer()
+	soapServer := soap.NewServer()
 
-	soapServer.HandleOperation(
+	soapServer.RegisterHandler(
+		"/",
 		// SOAPAction
 		"operationFoo",
 		// tagname of soap body content
@@ -46,10 +43,13 @@ func main() {
 			return &FooRequest{}
 		},
 		// OperationHandlerFunc - do something
-		func(request interface{}, w http.ResponseWriter, httpRequest *http.Request) (response interface{}, err error) {
+		func(request interface{},
+			w http.ResponseWriter,
+			httpRequest *http.Request,
+		) (response interface{}, err error) {
 			fooRequest := request.(*FooRequest)
 			fooResponse := &FooResponse{
-				Bar: "Hello " + fooRequest.Foo,
+				Bar: "Hellow " + fooRequest.Foo,
 			}
 			response = fooResponse
 			return
@@ -61,5 +61,5 @@ func main() {
 		panic(err)
 	}
 
-        soapServer.Serve(unixListener)
+	http.Serve(unixListener, soapServer)
 }
