@@ -1,0 +1,6 @@
+[[request]]
+action = "operationFoo"
+tagname = "fooRequest"
+response = """
+<Bar>Hellow hello i am foo</Bar>
+"""
