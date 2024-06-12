@@ -1,0 +1,13 @@
+[[request]]
+action = "operationFoo"
+tagname = "fooRequest"
+response = """
+<Bar>Hellow hello i am foo</Bar>
+"""
+
+[[request]]
+action = "operationBar"
+tagname = "barRequest"
+response = """
+<Baz>Hellow hello i am bar</Baz>
+"""
