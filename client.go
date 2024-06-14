@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 
-        	"github.com/hooklift/gowsdl/soap"
+	"github.com/hooklift/gowsdl/soap"
 )
 
 // FooRequest a simple request
@@ -21,7 +21,6 @@ type FooRequest struct {
 type FooResponse struct {
 	Bar string
 }
-
 
 type GetInstanceProperties struct {
 	XMLName xml.Name `xml:"urn:SAPControl GetInstanceProperties"`
@@ -69,4 +68,13 @@ func main() {
 	// The url used here is just phony:
 	// we need a well formed url to create the instance but the above DialContext function won't actually use it.
 	client := soap.NewClient("http://unix", soap.WithHTTPClient(udsClient))
+
+	request := &GetInstanceProperties{}
+	response := &GetInstancePropertiesResponse{}
+	err := s.client.CallContext(ctx, "''", request, response)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println(response)
 }
