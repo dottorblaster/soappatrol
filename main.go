@@ -40,7 +40,7 @@ func main() {
 
 	configString, err := os.ReadFile(os.Args[2])
 	if err != nil {
-		fmt.Print(err)
+		fmt.Println(err)
 		return
 	}
 
