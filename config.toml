@@ -11,3 +11,10 @@ tagname = "barRequest"
 response = """
 <Baz>Hellow hello i am bar</Baz>
 """
+
+[[request]]
+action = ""
+tagname = "urn:SAPControl GetInstanceProperties"
+response = """
+<Baz>Hellow hello i am bar</Baz>
+"""
