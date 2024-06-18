@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/xml"
 	"fmt"
-	"github.com/foomo/soap"
+	"github.com/dottorblaster/soappatrol/soap"
 	"net"
 	"net/http"
 	"os"
@@ -15,6 +15,10 @@ import (
 type FooRequest struct {
 	XMLName xml.Name `xml:"fooRequest"`
 	Foo     string
+}
+
+type MockRequest struct {
+  XMLName xml.Name
 }
 
 // FooResponse a simple response
@@ -66,7 +70,7 @@ func main() {
 			r.Tagname,
 			// RequestFactoryFunc - give the server sth. to unmarshal the request into
 			func() interface{} {
-				return &FooRequest{}
+				return &MockRequest{}
 			},
 			// OperationHandlerFunc - do something
 			func(request interface{},

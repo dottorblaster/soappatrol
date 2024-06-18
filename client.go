@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"encoding/xml"
-	"log"
 	"net"
+        "time"
 	"net/http"
 	"os"
+        "fmt"
 
 	"github.com/hooklift/gowsdl/soap"
 )
@@ -38,22 +39,6 @@ type InstanceProperty struct {
 }
 
 func main() {
-	soap.Verbose = true
-	socket := os.Args[1]
-	transport := &http.Transport{
-		DialContext: func(ctx context.Context, _, _ string) (net.Conn, error) {
-			d := net.Dialer{}
-			return d.DialContext(ctx, "unix", socket)
-		},
-	}
-	client := soap.NewClient("http://127.0.0.1:8080/", nil, transport)
-	response := &FooResponse{}
-	httpResponse, err := client.Call("operationFoo", &FooRequest{Foo: "hello i am foo"}, response)
-	if err != nil {
-		panic(err)
-	}
-	log.Println(response.Bar, httpResponse.Status)
-
 	socket := os.Args[1]
 	udsClient := &http.Client{
 		Timeout: 30 * time.Second,
@@ -71,9 +56,9 @@ func main() {
 
 	request := &GetInstanceProperties{}
 	response := &GetInstancePropertiesResponse{}
-	err := s.client.CallContext(ctx, "''", request, response)
+	err := client.Call("''", request, response)
 	if err != nil {
-		return nil, err
+          fmt.Println(err)
 	}
 
 	fmt.Println(response)

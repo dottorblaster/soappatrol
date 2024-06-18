@@ -13,8 +13,16 @@ response = """
 """
 
 [[request]]
-action = ""
-tagname = "urn:SAPControl GetInstanceProperties"
+action = "''"
+tagname = "GetInstanceProperties"
 response = """
-<Baz>Hellow hello i am bar</Baz>
+<urn:SAPControl GetInstancePropertiesResponse>
+  <proprties>
+    <item>
+      <property>wefw</property>
+      <propertytype>wef</propertytype>
+      <value>wefwef</value>
+    </item>
+  </properties>
+</urn:SAPControl GetInstancePropertiesResponse>
 """
