@@ -16,13 +16,13 @@ response = """
 action = "''"
 tagname = "GetInstanceProperties"
 response = """
-<urn:SAPControl GetInstancePropertiesResponse>
-  <proprties>
+<GetInstancePropertiesResponse xmlns="urn:SAPControl">
+  <properties>
     <item>
       <property>wefw</property>
       <propertytype>wef</propertytype>
       <value>wefwef</value>
     </item>
   </properties>
-</urn:SAPControl GetInstancePropertiesResponse>
+</GetInstancePropertiesResponse>
 """

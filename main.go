@@ -18,7 +18,7 @@ type FooRequest struct {
 }
 
 type MockRequest struct {
-  XMLName xml.Name
+	XMLName xml.Name
 }
 
 // FooResponse a simple response
@@ -30,6 +30,10 @@ type Request struct {
 	Action   string
 	Tagname  string
 	Response string
+}
+
+type MockResponse struct {
+	Response string `xml:",innerxml"`
 }
 
 type Config struct {
@@ -77,7 +81,9 @@ func main() {
 				w http.ResponseWriter,
 				httpRequest *http.Request,
 			) (response interface{}, err error) {
-				response = r.Response
+				response = &MockResponse{
+					Response: r.Response,
+				}
 				return
 			},
 		)

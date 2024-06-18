@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	"encoding/xml"
+	"fmt"
 	"net"
-        "time"
 	"net/http"
 	"os"
-        "fmt"
+	"time"
 
 	"github.com/hooklift/gowsdl/soap"
 )
@@ -56,9 +56,10 @@ func main() {
 
 	request := &GetInstanceProperties{}
 	response := &GetInstancePropertiesResponse{}
+
 	err := client.Call("''", request, response)
 	if err != nil {
-          fmt.Println(err)
+		fmt.Println(err)
 	}
 
 	fmt.Println(response)
