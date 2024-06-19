@@ -54,9 +54,9 @@ type Header struct {
 }
 
 type SuccessEnvelope struct {
- 	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Envelope"`
+	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Envelope"`
 	Header  Header
-        Body    interface{} `xml:"http://schemas.xmlsoap.org/soap/envelope/ Body"` 
+	Body    interface{} `xml:"http://schemas.xmlsoap.org/soap/envelope/ Body"`
 }
 
 // Body type
