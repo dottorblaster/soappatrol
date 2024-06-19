@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/xml"
 	"fmt"
-	"github.com/foomo/soap"
+	"github.com/dottorblaster/soappatrol/soap"
 	"net"
 	"net/http"
 	"os"
@@ -17,6 +17,10 @@ type FooRequest struct {
 	Foo     string
 }
 
+type MockRequest struct {
+	XMLName xml.Name
+}
+
 // FooResponse a simple response
 type FooResponse struct {
 	Bar string
@@ -26,6 +30,10 @@ type Request struct {
 	Action   string
 	Tagname  string
 	Response string
+}
+
+type MockResponse struct {
+	Response string `xml:",innerxml"`
 }
 
 type Config struct {
@@ -40,7 +48,7 @@ func main() {
 
 	configString, err := os.ReadFile(os.Args[2])
 	if err != nil {
-		fmt.Print(err)
+		fmt.Println(err)
 		return
 	}
 
@@ -66,14 +74,16 @@ func main() {
 			r.Tagname,
 			// RequestFactoryFunc - give the server sth. to unmarshal the request into
 			func() interface{} {
-				return &FooRequest{}
+				return &MockRequest{}
 			},
 			// OperationHandlerFunc - do something
 			func(request interface{},
 				w http.ResponseWriter,
 				httpRequest *http.Request,
 			) (response interface{}, err error) {
-				response = r.Response
+				response = &MockResponse{
+					Response: r.Response,
+				}
 				return
 			},
 		)
