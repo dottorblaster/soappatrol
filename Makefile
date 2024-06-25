@@ -1,8 +1,8 @@
 soappatrol:
-	go build -o soappatrol main.go
+	CGO_ENABLED=0 go build -o soappatrol main.go
 
 client:
-	go build -o client client.go
+	CGO_ENABLED=0 go build -o client client.go
 
 all: soappatrol client
 
