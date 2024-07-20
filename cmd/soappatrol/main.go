@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/xml"
 	"fmt"
-	"github.com/dottorblaster/soappatrol/soap"
+	"github.com/dottorblaster/soappatrol/pkg/soap"
 	"net"
 	"net/http"
 	"os"

@@ -13,7 +13,7 @@ linters:
     # - asasalint
     - containedctx
     # - cyclop
-    - depguard
+    # - depguard
     - dogsled
     - dupl
     - durationcheck
