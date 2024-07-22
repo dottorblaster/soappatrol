@@ -21,6 +21,6 @@
 go.work
 go.work.sum
 
-main
-client
-soappatrol
+/main
+/client
+/soappatrol
