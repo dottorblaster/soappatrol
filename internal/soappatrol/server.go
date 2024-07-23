@@ -3,6 +3,7 @@ package soappatrol
 import (
 	"encoding/xml"
 	"github.com/dottorblaster/soappatrol/pkg/soap"
+	"net"
 	"net/http"
 
 	"go.uber.org/zap"
@@ -37,7 +38,12 @@ type MockResponse struct {
 	Response string `xml:",innerxml"`
 }
 
-func New(config Config, logger *zap.SugaredLogger) *soap.Server {
+type Server struct {
+	SoapServer *soap.Server
+	Logger     *zap.SugaredLogger
+}
+
+func New(config Config, logger *zap.SugaredLogger) Server {
 	soapServer := soap.NewServer()
 
 	for _, r := range config.Requests {
@@ -67,5 +73,29 @@ func New(config Config, logger *zap.SugaredLogger) *soap.Server {
 
 	}
 
-	return soapServer
+	soappatrolServer := Server{
+		SoapServer: soapServer,
+		Logger:     logger,
+	}
+
+	return soappatrolServer
+}
+
+func (s *Server) ListenAndServe(socket string) error {
+	unixListener, err := net.Listen("unix", socket)
+	if err != nil {
+		s.Logger.Errorw("Error listening on the socket", err)
+		return err
+	}
+
+	// We have to bypass http.Server here because we have to explicitly
+	// bind our baked implementation of the SOAP server to the unix socket
+	// nolint:gosec
+	err = http.Serve(unixListener, s.SoapServer)
+	if err != nil {
+		s.Logger.Errorw("Error serving on the listener")
+		return err
+	}
+
+	return nil
 }

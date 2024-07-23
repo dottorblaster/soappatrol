@@ -7,5 +7,9 @@ format:
 
 all: soappatrol
 
+.PHONY: test
+test:
+	go test -v -p 1 -race ./...
+
 clean:
 	rm -rf soappatrol
