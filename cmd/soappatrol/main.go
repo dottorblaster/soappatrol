@@ -1,8 +1,6 @@
 package main
 
 import (
-	"net"
-	"net/http"
 	"os"
 
 	"github.com/BurntSushi/toml"
@@ -39,20 +37,10 @@ func main() {
 
 	os.Remove(os.Args[1])
 
-	soapServer := soappatrol.New(config, logger)
+	soappatrolServer := soappatrol.New(config, logger)
 
-	unixListener, err := net.Listen("unix", os.Args[1])
+	err = soappatrolServer.ListenAndServe(os.Args[1])
 	if err != nil {
-		logger.Errorw("Error listening on the port")
-		panic(err)
-	}
-
-	// We have to bypass http.Server here because we have to explicitly
-	// bind our baked implementation of the SOAP server to the unix socket
-	// nolint:gosec
-	err = http.Serve(unixListener, soapServer)
-	if err != nil {
-		logger.Errorw("Error serving on the listener")
 		panic(err)
 	}
 }
