@@ -1,6 +1,7 @@
 package soappatrol
 
 import (
+	"context"
 	"encoding/xml"
 	"github.com/dottorblaster/soappatrol/pkg/soap"
 	"net"
@@ -95,8 +96,17 @@ func (s *Server) ListenAndServe(socket string) error {
 	}
 
 	err = s.SoapServer.Serve(unixListener)
-	if err != nil {
+	if err != http.ErrServerClosed {
 		s.Logger.Errorw("Error serving on the listener")
+		return err
+	}
+
+	return nil
+}
+
+func (s *Server) Shutdown() error {
+	err := s.SoapServer.Shutdown(context.Background())
+	if err != nil {
 		return err
 	}
 

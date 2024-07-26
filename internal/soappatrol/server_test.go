@@ -76,7 +76,6 @@ func TestSoappatrolServer(t *testing.T) {
 		err := server.ListenAndServe(socket)
 		if err != nil {
 			t.Errorf("Error during server listen")
-
 		}
 	}(soapServer, socket)
 
@@ -109,5 +108,6 @@ func TestSoappatrolServer(t *testing.T) {
 		t.Errorf("megafail")
 	}
 
+	_ = soapServer.Shutdown()
 	os.Remove(socket)
 }
