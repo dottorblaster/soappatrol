@@ -5,6 +5,7 @@ import (
 	"github.com/dottorblaster/soappatrol/pkg/soap"
 	"net"
 	"net/http"
+	"time"
 
 	"go.uber.org/zap"
 )
@@ -39,7 +40,7 @@ type MockResponse struct {
 }
 
 type Server struct {
-	SoapServer *soap.Server
+	SoapServer *http.Server
 	Logger     *zap.SugaredLogger
 }
 
@@ -73,8 +74,13 @@ func New(config Config, logger *zap.SugaredLogger) Server {
 
 	}
 
+	httpServer := &http.Server{
+		Handler:           soapServer,
+		ReadHeaderTimeout: 32 * time.Second,
+	}
+
 	soappatrolServer := Server{
-		SoapServer: soapServer,
+		SoapServer: httpServer,
 		Logger:     logger,
 	}
 
@@ -88,10 +94,7 @@ func (s *Server) ListenAndServe(socket string) error {
 		return err
 	}
 
-	// We have to bypass http.Server here because we have to explicitly
-	// bind our baked implementation of the SOAP server to the unix socket
-	// nolint:gosec
-	err = http.Serve(unixListener, s.SoapServer)
+	err = s.SoapServer.Serve(unixListener)
 	if err != nil {
 		s.Logger.Errorw("Error serving on the listener")
 		return err
