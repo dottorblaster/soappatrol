@@ -72,15 +72,16 @@ func TestSoappatrolServer(t *testing.T) {
 
 	soapServer := soappatrol.New(config, logger)
 
-	go func(server soappatrol.Server, socket string) {
+	ctx, cancel := context.WithCancel(context.Background())
+	go func(ctx context.Context, server soappatrol.Server, socket string) {
 		err := server.ListenAndServe(socket)
 		if err != nil {
 			t.Errorf("Error during server listen")
 
 		}
-	}(soapServer, socket)
+	}(ctx, soapServer, socket)
 
-	time.Sleep(3 * time.Second)
+	time.Sleep(1 * time.Second)
 
 	udsClient := &http.Client{
 		Timeout: 30 * time.Second,
@@ -108,6 +109,8 @@ func TestSoappatrolServer(t *testing.T) {
 	if response.Properties[0].Property != "Pasta" {
 		t.Errorf("megafail")
 	}
+
+	cancel()
 
 	os.Remove(socket)
 }
