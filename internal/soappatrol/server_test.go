@@ -76,11 +76,10 @@ func TestSoappatrolServer(t *testing.T) {
 		err := server.ListenAndServe(socket)
 		if err != nil {
 			t.Errorf("Error during server listen")
-
 		}
 	}(soapServer, socket)
 
-	time.Sleep(3 * time.Second)
+	time.Sleep(1 * time.Second)
 
 	udsClient := &http.Client{
 		Timeout: 30 * time.Second,
@@ -109,5 +108,6 @@ func TestSoappatrolServer(t *testing.T) {
 		t.Errorf("megafail")
 	}
 
+	_ = soapServer.Shutdown()
 	os.Remove(socket)
 }
